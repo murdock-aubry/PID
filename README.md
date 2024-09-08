@@ -1,5 +1,8 @@
 # PID: Physics-Informed Diffusion Model for Infrared Image Generation
 
+Fork by Murdock Aubry
+Forked from fangyuanmao
+
 <img src="PID.png" alt="PID" style="zoom:50%;" />
 
 ## Paper
