@@ -77,6 +77,7 @@ if __name__ == "__main__":
     model = instantiate_from_config(config.model)
     model.load_state_dict(torch.load(opt.checkpoint,map_location='cuda:0')["state_dict"],
                           strict=False)
+
     
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     model = model.to(device)
@@ -92,15 +93,20 @@ if __name__ == "__main__":
 
                 c = model.cond_stage_model.encode(batch["conditional"])
                 shape = (c.shape[1]+1,)+c.shape[2:]
+
                 samples_ddim, _ = sampler.sample(S=opt.steps,
                                                  conditioning=c,
                                                  batch_size=c.shape[0],
                                                  shape=shape,
                                                  verbose=False,
                                                  ddim_eta=opt.ddim_eta)
+
+                print(samples_ddim)
+                quit()
                 x_samples_ddim = model.decode_first_stage(samples_ddim)
                 predicted_image = torch.clamp((x_samples_ddim+1.0)/2.0,
                                               min=0.0, max=1.0)
                 
                 predicted_image = predicted_image.cpu().numpy().transpose(0,2,3,1)[0]*255
+
                 Image.fromarray(predicted_image.astype(np.uint8)).save(outpath)
