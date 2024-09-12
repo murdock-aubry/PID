@@ -100,17 +100,10 @@ if __name__ == "__main__":
                 tevnet_out = model.tev_net(c)
                 temp_out = tevnet_out[:, 1, :, :]
 
-                print(tevnet_out)
-
-                print(temp_out)
-
 
 
                 predicted_temp = torch.clamp((temp_out+1.0)/2.0,
                                               min=0.0, max=1.0)
-
-                print(predicted_temp)
-                quit()
 
                 samples_ddim, _ = sampler.sample(S=opt.steps,
                                                  conditioning=c,

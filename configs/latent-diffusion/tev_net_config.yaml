@@ -1,0 +1,9 @@
+model:
+  tev_net_config: 
+    target: ldm.modules.HADARNet.modules.HADARNet
+    params:
+      in_channels: 3
+      out_channels: 6
+      smp_model: Unet
+      smp_encoder: resnet18
+      ckpt_path: "/w/246/murdock/PID/epoch_950.pth"

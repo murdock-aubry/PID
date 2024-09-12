@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=0 python3 tevnet_test.py --config /w/246/murdock/PID/configs/latent-diffusion/tev_net_config.yaml  --checkpoint '/w/246/murdock/PID/epoch_950.pth' 
