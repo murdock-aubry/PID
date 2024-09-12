@@ -1,0 +1,11 @@
+#!/bin/bash
+#SBATCH --partition=gpunodes
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=16G
+#SBATCH --gres=gpu:1
+#SBATCH --time=60
+#SBATCH --job-name=
+#SBATCH --output=/w/246/murdock/PID/outs/slurm-%j.out
+
+
+srun python3 test-sbatch.py

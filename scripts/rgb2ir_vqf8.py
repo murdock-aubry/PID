@@ -83,6 +83,8 @@ if __name__ == "__main__":
     model = model.to(device)
     sampler = DDIMSampler(model)
 
+    
+
     os.makedirs(opt.outdir, exist_ok=True)
     with torch.no_grad():
         with model.ema_scope():
@@ -91,8 +93,24 @@ if __name__ == "__main__":
                 outpath = os.path.join(opt.outdir, os.path.split(visible)[1])
                 batch = make_batch(visible, device=device)
 
+
                 c = model.cond_stage_model.encode(batch["conditional"])
                 shape = (c.shape[1]+1,)+c.shape[2:]
+
+                tevnet_out = model.tev_net(c)
+                temp_out = tevnet_out[:, 1, :, :]
+
+                print(tevnet_out)
+
+                print(temp_out)
+
+
+
+                predicted_temp = torch.clamp((temp_out+1.0)/2.0,
+                                              min=0.0, max=1.0)
+
+                print(predicted_temp)
+                quit()
 
                 samples_ddim, _ = sampler.sample(S=opt.steps,
                                                  conditioning=c,
@@ -101,12 +119,13 @@ if __name__ == "__main__":
                                                  verbose=False,
                                                  ddim_eta=opt.ddim_eta)
 
-                print(samples_ddim)
-                quit()
                 x_samples_ddim = model.decode_first_stage(samples_ddim)
+
                 predicted_image = torch.clamp((x_samples_ddim+1.0)/2.0,
                                               min=0.0, max=1.0)
-                
+
+
+
                 predicted_image = predicted_image.cpu().numpy().transpose(0,2,3,1)[0]*255
 
                 Image.fromarray(predicted_image.astype(np.uint8)).save(outpath)
